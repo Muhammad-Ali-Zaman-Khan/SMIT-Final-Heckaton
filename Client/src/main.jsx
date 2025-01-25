@@ -1,31 +1,56 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from "./Layout.jsx";
-import HomePage from "./screens/Home/HomePage.jsx";
-
-import { store } from "./config/redux/stores/store.js";
+import Register from "./pages/Register.jsx";
+import Login from "./pages/Login.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Logout from "./pages/Logout.jsx";
+import Home from "./pages/Home.jsx";
+import Test from "./pages/Test.jsx";
+import { store } from "../Redux/store/store.js";
 import { Provider } from "react-redux";
 
-// Route Configuration
-const route = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />, // Main layout for all pages
+    element: <App />,
     children: [
       {
-        path: "", // Default route (HomePage)
-        element: <HomePage />,
+        path: "/Register",
+        element: <Register />,
       },
-
-   
+      {
+        path: "/Home",
+        element: <Home />,
+      },
+      {
+        path: "/Login",
+        element: <Login />,
+      },
+      {
+        path: "/Dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/Logout",
+        element: <Logout />,
+      },
+      {
+        path: "/test",
+        element: <Test />,
+      },
     ],
   },
 ]);
 
-// Render the Router
 createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
-    <RouterProvider router={route} />
-  </Provider>
+    <Provider store={store}>
+  <RouterProvider router={router}>
+
+      <App />
+   
+   
+  </RouterProvider>
+    </Provider>
 );

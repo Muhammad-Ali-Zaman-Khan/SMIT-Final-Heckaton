@@ -122,7 +122,7 @@ const deleteUser = async (req, res) => {
 // register user
 
 const registerUser = async (req, res) => {
-  const { username, email, password, address, phone, cnic } = req.body;
+  const { username, email, cnic } = req.body;
 
   if (!username) {
       return res.status(400).json({ message: "Username is required" });
@@ -130,15 +130,15 @@ const registerUser = async (req, res) => {
   if (!email) {
       return res.status(400).json({ message: "Email is required" });
   }
-  if (!password) {
-      return res.status(400).json({ message: "Password is required" });
-  }
-  if (!address) {
-      return res.status(400).json({ message: "Address is required" });
-  }
-  if (!phone) {
-      return res.status(400).json({ message: "Phone is required" });
-  }
+  // if (!password) {
+  //     return res.status(400).json({ message: "Password is required" });
+  // }
+  // if (!address) {
+  //     return res.status(400).json({ message: "Address is required" });
+  // }
+  // if (!phone) {
+  //     return res.status(400).json({ message: "Phone is required" });
+  // }
   if (!cnic) {
       return res.status(400).json({ message: "CNIC is required" });
   }
@@ -149,14 +149,9 @@ const registerUser = async (req, res) => {
           return res.status(409).json({ message: "User already exists" });
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
-
       const newUser = await User.create({
           username,
           email,
-          password: hashedPassword,
-          address,
-          phone,
           cnic,
       });
 
@@ -180,8 +175,6 @@ const registerUser = async (req, res) => {
               id: newUser._id,
               username: newUser.username,
               email: newUser.email,
-              address: newUser.address,
-              phone: newUser.phone,
               cnic: newUser.cnic,
           },
       });
