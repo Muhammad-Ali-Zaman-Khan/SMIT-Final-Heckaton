@@ -5,9 +5,11 @@ import cors from "cors";
 // import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
 import connectDB from "./src/db/index.js";
-import usersRoutes from "./src/routes/product.route.js"
-import productRoutes from "./src/routes/user.route.js"
-import orderRoutes from "./src/routes/order.route.js"
+import usersRoutes from "./src/routes/user.route.js";
+import adminRoutes from "./src/routes/admin.routes.js"
+import loanRoutes from "./src/routes/loan.routes.js"
+import loanApplicationRoutes from "./src/routes/loanApplication.routes.js"
+import subCategoryRoutes from "./src/routes/subCategories.routes.js"
 dotenv.config();
 const app = express();
 const port = 3000
@@ -18,9 +20,11 @@ app.use(cookieParser());
 
 
 // routes
-app.use("/api/v1", productRoutes);
 app.use("/api/v1", usersRoutes);
-app.use("/api/v1", orderRoutes);
+app.use("/api/v1", adminRoutes);
+app.use("/api/v1", loanRoutes);
+app.use("/api/v1", loanApplicationRoutes);
+app.use("/api/v1", subCategoryRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
