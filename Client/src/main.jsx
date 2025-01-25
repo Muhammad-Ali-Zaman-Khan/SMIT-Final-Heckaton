@@ -1,45 +1,31 @@
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Layout from './Layout.jsx';
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "./Layout.jsx";
+import HomePage from "./screens/Home/HomePage.jsx";
 
-// const router = createBrowserRouter([
-//   {
-//     path: ``,
-//     element: <Layout />,
-//     children: [
-//       {
-//         path: ``,
-//         element: <Home />,
-//       },
-//       {
-//         path: `/login`,
-//         element: <Login />,
-//       },
-//       {
-//         path: `/register`,
-//         element: <Register />,
-//       },
-//       {
-//         path: `/dashboard`,
-//         element: <ProtectedRoutes component={<Dashboard />} />,
-//       },
-//       {
-//         path: `/profile`,
-//         element:<ProtectedRoutes component={<Profile />} />
-//       },
-//       {
-//         path: `/singleuser`,
-//         element: <ProtectedRoutes component={<Singleuser/>}/>,
-//       },
-//     ]
-//   }
-// ]);
+import { store } from "./config/redux/stores/store.js";
+import { Provider } from "react-redux";
 
-createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router}>
-    <App />
-  </RouterProvider>
-  
-)
+// Route Configuration
+const route = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />, // Main layout for all pages
+    children: [
+      {
+        path: "", // Default route (HomePage)
+        element: <HomePage />,
+      },
+
+   
+    ],
+  },
+]);
+
+// Render the Router
+createRoot(document.getElementById("root")).render(
+  <Provider store={store}>
+    <RouterProvider router={route} />
+  </Provider>
+);
