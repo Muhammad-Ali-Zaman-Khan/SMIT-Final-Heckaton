@@ -4,16 +4,16 @@ import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
 import Logout from "./pages/Logout.jsx";
 import Home from "./pages/Home.jsx";
-import Test from "./pages/Test.jsx";
 import { store } from "../Redux/store/store.js";
 import { Provider } from "react-redux";
+import Application from "./pages/Application.jsx";
+import Slip from "./pages/Slip.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "",
     element: <App />,
     children: [
       {
@@ -29,16 +29,16 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "/Dashboard",
-        element: <Dashboard />,
+        path: "/application",
+        element: <Application />,
+      },
+      {
+        path: "/slip",
+        element: <Slip />,
       },
       {
         path: "/Logout",
         element: <Logout />,
-      },
-      {
-        path: "/test",
-        element: <Test />,
       },
     ],
   },
@@ -47,10 +47,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
     <Provider store={store}>
   <RouterProvider router={router}>
-
-      <App />
-   
-   
+    <App />
   </RouterProvider>
     </Provider>
 );

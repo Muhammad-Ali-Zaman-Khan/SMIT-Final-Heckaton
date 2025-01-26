@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom'; 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -12,6 +12,7 @@ const RegisterForm = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -27,12 +28,13 @@ const RegisterForm = () => {
     setSuccess('');
 
     try {
-      // API call to register the user
       const response = await axios.post('http://localhost:3000/api/v1/register', formData);
-      setSuccess(response.data.message); // Display success message from API
-      setFormData({ username: '', email: '', cnic: '', role: 'user' }); // Reset form
+      setSuccess(response.data.message);
+      setFormData({ username: '', email: '', cnic: '', role: 'user' });
+
+      navigate('/login');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Try again.'); // Handle errors
+      setError(err.response?.data?.message || 'Registration failed. Try again.');
     } finally {
       setLoading(false);
     }
@@ -47,7 +49,6 @@ const RegisterForm = () => {
         {success && <div className="text-green-500 text-center mb-4">{success}</div>}
 
         <form onSubmit={handleSubmit}>
-          {/* Username Field */}
           <div className="mb-4">
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
             <input
@@ -62,7 +63,6 @@ const RegisterForm = () => {
             />
           </div>
 
-          {/* Email Field */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <input
@@ -77,7 +77,7 @@ const RegisterForm = () => {
             />
           </div>
 
-          {/* CNIC Field */}
+
           <div className="mb-4">
             <label htmlFor="cnic" className="block text-sm font-medium text-gray-700">CNIC</label>
             <input
@@ -92,7 +92,7 @@ const RegisterForm = () => {
             />
           </div>
 
-          {/* Role Field */}
+
           <div className="mb-6">
             <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">Role</label>
             <select
@@ -107,7 +107,6 @@ const RegisterForm = () => {
             </select>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}

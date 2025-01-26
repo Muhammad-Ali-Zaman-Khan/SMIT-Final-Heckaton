@@ -130,15 +130,6 @@ const registerUser = async (req, res) => {
   if (!email) {
       return res.status(400).json({ message: "Email is required" });
   }
-  // if (!password) {
-  //     return res.status(400).json({ message: "Password is required" });
-  // }
-  // if (!address) {
-  //     return res.status(400).json({ message: "Address is required" });
-  // }
-  // if (!phone) {
-  //     return res.status(400).json({ message: "Phone is required" });
-  // }
   if (!cnic) {
       return res.status(400).json({ message: "CNIC is required" });
   }
@@ -188,52 +179,52 @@ const registerUser = async (req, res) => {
 
 // login user
 
-
 const loginUser = async (req, res) => {
-    const { username, email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (!username && !email) {
-        return res.status(400).json({ message: "Either username or email is required" });
-    }
-    if (!password) {
-        return res.status(400).json({ message: "Password is required" });
-    }
+  if (!email) return res.status(400).json({ message: "Email is required" });
+  if (!password) return res.status(400).json({ message: "Password is required" });
 
-    try {
-        const user = await User.findOne({
-            $or: [{ email }, { username }],
-        });
+  try {
+      const user = await User.findOne({ email });
+      if (!user) return res.status(404).json({ message: "No user found" });
 
-        if (!user) {
-            return res.status(404).json({ message: "No user found" });
-        }
+      console.log("Hashed password in DB:", user.password);
+      console.log("Entered password:", password);
 
-        const accessToken = generateAccessToken(user._id);
-        const refreshToken = generateRefreshToken(user._id);
 
-        res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000, 
-        });
+      const accessToken = generateAccessToken(user._id);
+      const refreshToken = generateRefreshToken(user._id);
 
-        res.json({
-            message: "User logged in successfully",
-            accessToken,
-            data: {
-                id: user._id,
-                username: user.username,
-                email: user.email,
-            },
-        });
-    } catch (error) {
-        console.error("Error during login:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+      res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
+      res.json({
+          message: "User logged in successfully",
+          accessToken,
+          data: { id: user._id, email: user.email },
+      });
+  } catch (error) {
+      console.error("Error during login:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 
 
 
-export {registerUser , loginUser , createUser , getAllUsers , getUserByCNIC , updateUser , deleteUser};
+
+// LOGOUT USER
+const logoutUser = async (req, res) => {
+  res.clearCookie("refreshToken");
+  res.json({ message: "user logout successfully" });
+};
+
+
+
+
+export {registerUser , loginUser , createUser , getAllUsers , getUserByCNIC , updateUser , deleteUser , logoutUser};

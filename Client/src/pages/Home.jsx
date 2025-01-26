@@ -1,79 +1,94 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-  const [blogs, setBlogs] = useState([]);
+  const [category, setCategory] = useState('');
+  const [subcategory, setSubcategory] = useState('');
+  const [deposit, setDeposit] = useState('');
+  const [loanPeriod, setLoanPeriod] = useState('');
+  const navigate = useNavigate(); 
 
-  const allBlogs = async () => {
-    try {
-      const token = localStorage.getItem("token"); // Token ko yahan se uthain
-      const response = await axios.get(
-        "https://final-hackthon-frontend.vercel.app/api/UserPost/post",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Authorization header add karein
-          },
-        }
-      );
-      console.log(response.data.posts); // 'posts' key ko console karein
-      setBlogs(response.data.posts); // Correct key ke saath state update karein
-      console.log(blogs, "db waly blogs ye hen");
-    } catch (error) {
-      console.error(error);
-      setBlogs([]);
+
+  const handleCalculate = () => {
+    if (!deposit || !loanPeriod) {
+      alert('Please enter both initial deposit and loan period.');
+      return;
     }
+
+    const interestRate = 0.05; 
+    const totalAmount = parseFloat(deposit) + (parseFloat(loanPeriod) * interestRate * parseFloat(deposit));
+
+    alert(`Total Loan Amount: $${totalAmount.toFixed(2)}`);
+    navigate('/application');
   };
 
-  useEffect(() => {
-    allBlogs();
-  }, []);
-
   return (
-    <>
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">All Blogs</h1>
-        {blogs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogs.map((blog) => (
-              <div
-                key={blog._id}
-                className="card w-full bg-base-100 shadow-xl"
-                style={{ minHeight: "250px" }}
-              >
-                <div className="card-body" style={{ padding: "16px" }}>
-                  {blog.author?.image && (
-                    <img
-                      src={blog.author.image}
-                      alt="User Profile"
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  )}
-                  <h2 className="card-title">{blog.title}</h2>
-                  <div
-                    style={{
-                      maxHeight: "100px",
-                      overflowY: "auto",
-                      overflowX: "hidden",
-                      display: "block",
-                      paddingRight: "5px",
-                    }}
-                  >
-                    {blog.content}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No blogs available.</p>
-        )}
+    <div className="container mx-auto p-4">
+      <h1 className="text-4xl font-bold mb-4">Loan Application</h1>
+      <div className="mb-4">
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Loan Category</span>
+          </label>
+          <select
+            className="select select-bordered w-full"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="Wedding Loans">Wedding Loans</option>
+            <option value="Home Construction Loans">Home Construction Loans</option>
+            <option value="Business Startup Loans">Business Startup Loans</option>
+            <option value="Education Loans">Education Loans</option>
+          </select>
+        </div>
+
+        <div className="form-control mt-4">
+          <label className="label">
+            <span className="label-text">Subcategory</span>
+          </label>
+          <select
+            className="select select-bordered w-full"
+            value={subcategory}
+            onChange={(e) => setSubcategory(e.target.value)}
+          >
+            <option value="Standard">Input initial deposit.</option>
+            <option value="Premium">Select loan period</option>
+          </select>
+        </div>
+
+        <div className="form-control mt-4">
+          <label className="label">
+            <span className="label-text">Initial Deposit</span>
+          </label>
+          <input
+            type="number"
+            className="input input-bordered w-full"
+            placeholder="Enter amount"
+            value={deposit}
+            onChange={(e) => setDeposit(e.target.value)}
+          />
+        </div>
+
+        <div className="form-control mt-4">
+          <label className="label">
+            <span className="label-text">Loan Period (Months)</span>
+          </label>
+          <input
+            type="number"
+            className="input input-bordered w-full"
+            placeholder="Enter period"
+            value={loanPeriod}
+            onChange={(e) => setLoanPeriod(e.target.value)}
+          />
+        </div>
+
+        <div className="mt-4">
+          <button className="btn btn-primary w-full" onClick={handleCalculate}>
+            Calculate Loan Breakdown
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

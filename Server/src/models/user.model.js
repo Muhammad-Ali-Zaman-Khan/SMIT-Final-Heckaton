@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  loans: [
+  loan: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Loan",
